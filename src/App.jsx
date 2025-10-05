@@ -41,7 +41,6 @@ export const App = () => {
 
   const toggleReverse = () => {
     setIsReversed(!isReversed);
-    setActiveButton('reverse');
     const reversedGoods = [...goods].reverse();
 
     setGoods(reversedGoods);
