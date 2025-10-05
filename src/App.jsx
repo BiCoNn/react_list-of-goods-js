@@ -39,7 +39,7 @@ export const App = () => {
     setGoods(sortedGoods);
   };
 
-  const sortByReverse = () => {
+  const toggleReverse = () => {
     setIsReversed(!isReversed);
     setActiveButton('reverse');
     const reversedGoods = [...goods].reverse();
@@ -48,8 +48,17 @@ export const App = () => {
   };
 
   const resetSort = () => {
+    setIsReversed(false);
     setActiveButton(null);
     setGoods([...goodsFromServer]);
+  };
+
+  const arraysEqual = (arr1, arr2) => {
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+
+    return arr1.every((value, index) => value === arr2[index]);
   };
 
   return (
@@ -74,12 +83,12 @@ export const App = () => {
         <button
           type="button"
           className={`button is-info ${isReversed === true ? '' : 'is-light'}`}
-          onClick={sortByReverse}
+          onClick={toggleReverse}
         >
           Reverse
         </button>
 
-        {activeButton !== null && (
+        {!arraysEqual(goods, goodsFromServer) && (
           <button
             type="button"
             className={`button is-danger ${activeButton === 'reset' ? '' : 'is-light'}`}
