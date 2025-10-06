@@ -27,7 +27,11 @@ export const App = () => {
       return goodsA.localeCompare(goodsB);
     });
 
-    setGoods(sortedGoods);
+    if (isReversed) {
+      setGoods(sortedGoods.reverse());
+    } else {
+      setGoods(sortedGoods);
+    }
   };
 
   const sortByLength = () => {
@@ -36,7 +40,11 @@ export const App = () => {
       return goodsA.length - goodsB.length;
     });
 
-    setGoods(sortedGoods);
+    if (isReversed) {
+      setGoods(sortedGoods.reverse());
+    } else {
+      setGoods(sortedGoods);
+    }
   };
 
   const toggleReverse = () => {
