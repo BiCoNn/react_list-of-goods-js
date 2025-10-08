@@ -15,7 +15,7 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-function arraysIsEqual(arr1, arr2) {
+function areArraysEqual(arr1, arr2) {
   if (arr1.length !== arr2.length) {
     return false;
   }
@@ -97,7 +97,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {!arraysIsEqual(goods, goodsFromServer) && (
+        {!areArraysEqual(goods, goodsFromServer) && (
           <button
             type="button"
             className="button is-danger is-light"
