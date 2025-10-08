@@ -39,17 +39,17 @@ export const App = () => {
     setReverse(false);
   };
 
+  const alphabetGoods = [...goodsFromServer].sort((a, b) => a.localeCompare(b));
+
   const sortGoods = mode => {
     setSortMode(mode);
     if (mode === 'alphabet') {
-      const alphabetGoods = [...goodsFromServer].sort((a, b) =>
-        a.localeCompare(b),
-      );
+      const alphabetGoodsNew = alphabetGoods;
 
       if (reverse === true) {
-        setGoods([...alphabetGoods].reverse());
+        setGoods([...alphabetGoodsNew].reverse());
       } else {
-        setGoods(alphabetGoods);
+        setGoods(alphabetGoodsNew);
       }
     }
 
