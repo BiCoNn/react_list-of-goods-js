@@ -1,7 +1,6 @@
-import { useState } from 'react';
-
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -16,56 +15,55 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+function arraysIsEqual(arr1, arr2) {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+
+  return arr1.every((el, i) => el === arr2[i]);
+}
+
 export const App = () => {
   const [goods, setGoods] = useState([...goodsFromServer]);
-  const [activeButton, setActiveButton] = useState(null);
-  const [isReversed, setIsReversed] = useState(false);
+  const [reverse, setReverse] = useState(false);
+  const [sortMode, setSortMode] = useState('none');
 
-  const sortByAlphabet = () => {
-    setActiveButton('alphabet');
-    const sortedGoods = [...goods].sort((goodsA, goodsB) => {
-      return goodsA.localeCompare(goodsB);
-    });
-
-    if (isReversed) {
-      setGoods(sortedGoods.reverse());
-    } else {
-      setGoods(sortedGoods);
-    }
+  const reverseGoods = () => {
+    setGoods([...goods].reverse());
+    setReverse(!reverse);
   };
 
-  const sortByLength = () => {
-    setActiveButton('length');
-    const sortedGoods = [...goods].sort((goodsA, goodsB) => {
-      return goodsA.length - goodsB.length;
-    });
-
-    if (isReversed) {
-      setGoods(sortedGoods.reverse());
-    } else {
-      setGoods(sortedGoods);
-    }
-  };
-
-  const toggleReverse = () => {
-    setIsReversed(!isReversed);
-    const reversedGoods = [...goods].reverse();
-
-    setGoods(reversedGoods);
-  };
-
-  const resetSort = () => {
-    setIsReversed(false);
-    setActiveButton(null);
+  const resetGoods = () => {
     setGoods([...goodsFromServer]);
+    setSortMode('');
+    setReverse(false);
   };
 
-  const arraysEqual = (arr1, arr2) => {
-    if (arr1.length !== arr2.length) {
-      return false;
+  const sortGoods = mode => {
+    setSortMode(mode);
+    if (mode === 'alphabet') {
+      const alphabetGoods = [...goodsFromServer].sort((a, b) =>
+        a.localeCompare(b),
+      );
+
+      if (reverse === true) {
+        setGoods([...alphabetGoods].reverse());
+      } else {
+        setGoods(alphabetGoods);
+      }
     }
 
-    return arr1.every((value, index) => value === arr2[index]);
+    if (mode === 'length') {
+      const lengthGoods = [...goodsFromServer].sort(
+        (a, b) => a.length - b.length,
+      );
+
+      if (reverse === true) {
+        setGoods([...lengthGoods].reverse());
+      } else {
+        setGoods(lengthGoods);
+      }
+    }
   };
 
   return (
@@ -73,33 +71,37 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${activeButton === 'alphabet' ? '' : 'is-light'}`}
-          onClick={sortByAlphabet}
+          className={`button is-info ${sortMode === 'alphabet' ? '' : 'is-light'}`}
+          onClick={() => {
+            sortGoods('alphabet');
+          }}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-info ${activeButton === 'length' ? '' : 'is-light'}`}
-          onClick={sortByLength}
+          className={`button is-success ${sortMode === 'length' ? '' : 'is-light'}`}
+          onClick={() => {
+            sortGoods('length');
+          }}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button is-info ${isReversed === true ? '' : 'is-light'}`}
-          onClick={toggleReverse}
+          className={`button is-warning ${!reverse ? 'is-light' : ''}`}
+          onClick={reverseGoods}
         >
           Reverse
         </button>
 
-        {!arraysEqual(goods, goodsFromServer) && (
+        {!arraysIsEqual(goods, goodsFromServer) && (
           <button
             type="button"
-            className={`button is-danger ${activeButton === 'reset' ? '' : 'is-light'}`}
-            onClick={resetSort}
+            className="button is-danger is-light"
+            onClick={resetGoods}
           >
             Reset
           </button>
@@ -107,11 +109,13 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map(item => (
-          <li data-cy="Good" key={item}>
-            {item}
-          </li>
-        ))}
+        {[...goods].map(good => {
+          return (
+            <li data-cy="Good" key={good}>
+              {good}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
